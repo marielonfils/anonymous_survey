@@ -606,11 +606,12 @@ impl<E:Pairing> SchnorrProof2<E>{
         let h = hasher.finalize();
         let common_h = E::ScalarField::from_le_bytes_mod_order(&h);
         for i in 0..LAMBDA{            
-            
-            for e in 0..B_2{                
+            response1 = r1s[i as usize];
+            response2 = r2s[i as usize];
+            for e in 1..B_2{                
                 challenge = E::ScalarField::from(e);
-                response1 = r1s[i as usize] + challenge * secret1;
-                response2 = r2s[i as usize] + challenge * secret2;
+                response1 = response1 +secret1;
+                response2 = response2 +secret2;
                 let mut hasher_b = Sha256::new();
                 Self::hash_b(&mut hasher_b, &common_h, i, &challenge, &response1, &response2);
                 let hb = hasher_b.finalize();
@@ -1223,12 +1224,16 @@ impl<E:Pairing> ProofAnonize<E>  {
         let mut i_u: usize;
         for i in 0..LAMBDA {
             i_u = i as usize;
-            for e in 0..B_2 {
+            z1=b1s[i_u];
+            z2=b2s[i_u];
+            z3=j1s[i_u];
+            z4=j2s[i_u];
+            for e in 1..B_2 {
                 challenge = E::ScalarField::from(e);
-                z1 = b1s[i_u]+challenge*id;
-                z2 = b2s[i_u]+challenge*sid;
-                z3 = *s1*challenge + j1s[i_u];
-                z4 = *s3*challenge + j2s[i_u];
+                z1 = z1+id;
+                z2 = z2+sid;
+                z3 = z3+*s1;
+                z4 = z4+*s3;
                 
                 let mut hasher_b = Sha256::new();
                 Self::hash_b(&mut hasher_b, &common_h, i, &challenge, &z1, &z2, &z3, &z4);

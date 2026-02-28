@@ -35,7 +35,7 @@ use std::{env, vec};
 fn main() {
     let args: Vec<String> = env::args().collect();
     let scheme = &args[1]; //AS for anonymous survey or AN for anonize
-    let exp_type = "AS"; //&args[2] for benchmarks;
+    let exp_type = &args[1]; //&args[2] for benchmarks;
     let run_id =1; //&args[3] for benchmarks;
 
     let mut rng = test_rng();
@@ -50,7 +50,6 @@ fn main() {
     let submission_proof_type = "GS"; //"GSLIB", "GS" in submission,
     
     let (signature_scheme_type, mut crs_ur, crs_type, group1, group2) = setup(scheme, ur_proof_type, submission_proof_type, &mut rng);
-    println!("crs_ur {:?} crs type {:?}",crs_ur, crs_type);
     //RA generation
     let start_ra = Instant::now();
     let ra = RA::<Bls12_381>::new(&signature_scheme_type);
